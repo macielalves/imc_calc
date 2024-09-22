@@ -10,7 +10,36 @@ class IMCApp extends StatelessWidget {
     return MaterialApp(
       title: 'Calculadora de IMC',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          // ···
+          brightness: Brightness.light,
+        ),
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontSize: 72,
+            fontWeight: FontWeight.bold,
+          ),
+          displaySmall: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusColor: Colors.green,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
       ),
       home: const IMCCalculator(),
     );
@@ -18,7 +47,7 @@ class IMCApp extends StatelessWidget {
 }
 
 class IMCCalculator extends StatefulWidget {
-  const IMCCalculator({super.key});
+  const IMCCalculator({super.key, borderRadiusSize});
 
   @override
   IMCCalculatorState createState() => IMCCalculatorState();
@@ -81,7 +110,6 @@ class IMCCalculatorState extends State<IMCCalculator> {
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Peso (kg)',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -90,7 +118,6 @@ class IMCCalculatorState extends State<IMCCalculator> {
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Altura (m)',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -98,8 +125,15 @@ class IMCCalculatorState extends State<IMCCalculator> {
               onPressed: _calculateIMC,
               style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 24),
-                  minimumSize: const Size(200, 50)),
-              child: const Text('Calcular IMC'),
+                  minimumSize: const Size(200, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  backgroundColor: Colors.green.shade300),
+              child: const Text(
+                'Calcular IMC',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 24),
             if (_imcResult != null)
