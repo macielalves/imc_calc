@@ -13,7 +13,6 @@ class IMCApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.green,
-          // ···
           brightness: Brightness.light,
         ),
         textTheme: const TextTheme(
@@ -47,7 +46,7 @@ class IMCApp extends StatelessWidget {
 }
 
 class IMCCalculator extends StatefulWidget {
-  const IMCCalculator({super.key, borderRadiusSize});
+  const IMCCalculator({super.key});
 
   @override
   IMCCalculatorState createState() => IMCCalculatorState();
@@ -105,6 +104,23 @@ class IMCCalculatorState extends State<IMCCalculator> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            if (_imcResult != null)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.green),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  'Seu IMC é ${_imcResult!.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+            const SizedBox(height: 24),
             TextField(
               controller: _weightController,
               keyboardType: TextInputType.number,
@@ -124,24 +140,18 @@ class IMCCalculatorState extends State<IMCCalculator> {
             ElevatedButton(
               onPressed: _calculateIMC,
               style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 24),
-                  minimumSize: const Size(200, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  backgroundColor: Colors.green.shade300),
+                textStyle: const TextStyle(fontSize: 24),
+                minimumSize: const Size(200, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                backgroundColor: Colors.green.shade300,
+              ),
               child: const Text(
                 'Calcular IMC',
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            const SizedBox(height: 24),
-            if (_imcResult != null)
-              Text(
-                'Seu IMC é ${_imcResult!.toStringAsFixed(2)}',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
           ],
         ),
       ),
