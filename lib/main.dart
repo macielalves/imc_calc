@@ -56,6 +56,55 @@ class IMCCalculatorState extends State<IMCCalculator> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   double? _imcResult;
+  String? _imcCategory;
+  int? _imcGrau;
+  Color? _categoryColor;
+
+  // < 18.5: Magreza, obersidade 0
+  // 18,5 a 24,9: Peso normal, obersidade 0
+  // 25 a 29,9: Sobrepeso, obersidade 1
+  // 30 a 34,9: Obesidade grau 1
+  // 35 a 39,9: Obesidade grau 2
+  // 40 ou mais: Obesidade grave grau 3
+  void _obesityCategory(double imc) {
+    if (imc < 18.5) {
+      setState(() {
+        _imcCategory = 'Magreza';
+        _imcGrau = 0;
+        _categoryColor = Colors.yellow;
+      });
+    } else if (imc >= 18.5 && imc <= 24.9) {
+      setState(() {
+        _imcCategory = 'Peso normal';
+        _imcGrau = 0;
+        _categoryColor = Colors.green;
+      });
+    } else if (imc >= 25 && imc <= 29.9) {
+      setState(() {
+        _imcCategory = 'Sobrepeso';
+        _imcGrau = 1;
+        _categoryColor = Colors.yellow;
+      });
+    } else if (imc >= 30 && imc <= 34.9) {
+      setState(() {
+        _imcCategory = 'Obesidade grau 1';
+        _imcGrau = 1;
+        _categoryColor = Colors.orange;
+      });
+    } else if (imc >= 35 && imc <= 39.9) {
+      setState(() {
+        _imcCategory = 'Obesidade grau 2';
+        _imcGrau = 2;
+        _categoryColor = Colors.deepOrange;
+      });
+    } else {
+      setState(() {
+        _imcCategory = 'Obesidade grave grau 3';
+        _imcGrau = 3;
+        _categoryColor = Colors.red;
+      });
+    }
+  }
 
   void _calculateIMC() {
     final double? weight = double.tryParse(_weightController.text);
@@ -64,10 +113,12 @@ class IMCCalculatorState extends State<IMCCalculator> {
     if (weight != null && height != null && height > 0) {
       setState(() {
         _imcResult = weight / (height * height);
+        _obesityCategory(_imcResult!);
       });
     } else {
       setState(() {
         _imcResult = null;
+        _imcCategory = null;
       });
       _showErrorDialog();
     }
@@ -102,24 +153,45 @@ class IMCCalculatorState extends State<IMCCalculator> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            if (_imcResult != null)
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.green),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  'Seu IMC é ${_imcResult!.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
+            Column(children: [
+              if (_imcResult != null)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    'Seu IMC é ${_imcResult!.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
                   ),
                 ),
-              ),
+              const SizedBox(height: 16),
+              if (_imcCategory != null)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    _imcCategory!,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: _categoryColor,
+                    ),
+                  ),
+                ),
+            ]),
             const SizedBox(height: 24),
             TextField(
               controller: _weightController,
